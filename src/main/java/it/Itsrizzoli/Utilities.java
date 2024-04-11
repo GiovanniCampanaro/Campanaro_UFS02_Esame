@@ -1,36 +1,36 @@
 package it.Itsrizzoli;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import com.google.gson.Gson;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.List;
 
 public class Utilities {
-    static String readTextFrom(String fname) {
+    public static String readTextFrom(String fname) {
         InputStream is;
         is = Utilities.class.getClassLoader().getResourceAsStream(fname);
         if (is == null) {
             throw new IllegalArgumentException("Il file " + fname + " non esiste");
         }
 
-        BufferedReader buf = new BufferedReader(new InputStreamReader(is));
         StringBuilder fileAsString = new StringBuilder();
-        String line;
-
-        try {
-            while ((line = buf.readLine()) != null) {
-                fileAsString.append(line).append("\n");
+        try (Reader reader = new InputStreamReader(is)) {
+            int character;
+            while ((character = reader.read()) != -1) {
+                fileAsString.append((char) character);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                buf.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
         return fileAsString.toString();
+    }
+
+    public static <T> T loadFromJson(String filename, Class<T> classOfT) {
+        String json = readTextFrom(filename);
+        Gson gson = new Gson();
+        return gson.fromJson(json, classOfT);
     }
 }

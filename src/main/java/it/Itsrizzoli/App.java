@@ -10,7 +10,7 @@ public class App {
     private static List<Pizza> pizzas;
 
     public static void main(String[] args) {
-        pizzas = PizzaLoader.loadPizzasFromJSON("src/main/resources/pizzas.json");
+        pizzas = PizzaLoader.loadPizzasFromJSON("pizzas.json");
 
         System.out.println("Server started!");
 
@@ -41,5 +41,5 @@ public class App {
         }
         return serverSocket;
     }
-    
+
 }
