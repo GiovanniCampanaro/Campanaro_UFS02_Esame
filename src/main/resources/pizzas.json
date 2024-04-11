@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Margherita",
+    "ingredients": ["tomato", "mozzarella", "basil"]
+  },
+  {
+    "name": "Prosciutto e Funghi",
+    "ingredients": ["tomato", "mozzarella", "ham", "mushrooms"]
+  },
+  {
+    "name": "Quattro Stagioni",
+    "ingredients": ["tomato", "mozzarella", "ham", "mushrooms", "artichokes", "olives", "anchovies", "oregano"]
+  }
+]

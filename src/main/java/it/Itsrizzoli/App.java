@@ -1,25 +1,24 @@
-
 package it.Itsrizzoli;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
-public class App
-{
+public class App {
     static int portNumber = 6666;
-    private static ParkingManager pm = new ParkingManager();
+    private static List<Pizza> pizzas;
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
+        // Carica le pizze da un file JSON utilizzando PizzaLoader
+        pizzas = PizzaLoader.loadPizzasFromJSON("pizzas.json");
 
         System.out.println("Server started!");
 
-
-
         ServerSocket serverSocket = getServerSocket();
-        while (true){
+        while (true) {
             Socket clientSocket = accept(serverSocket);
-            ClientHandler ch = new ClientHandler(clientSocket,pm);
+            ClientHandler ch = new ClientHandler(clientSocket, pizzas);
             ch.handle();
         }
     }
@@ -43,4 +42,5 @@ public class App
         }
         return serverSocket;
     }
+
 }

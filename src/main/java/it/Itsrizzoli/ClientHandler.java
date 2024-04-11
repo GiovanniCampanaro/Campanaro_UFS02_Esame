@@ -5,55 +5,26 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ClientHandler {
-    Socket clientSocket;
-    ParkingManager parkingManager;
+    private Socket clientSocket;
+    private List<Pizza> pizzaList;
 
-    public ClientHandler(Socket clientSocket, ParkingManager parkingManager) {
-
+    public ClientHandler(Socket clientSocket, List<Pizza> pizzaList) {
         this.clientSocket = clientSocket;
-        this.parkingManager = parkingManager;
+        this.pizzaList = pizzaList;
     }
 
-    void handle() {
-        BufferedReader in;
-        in = getBufferedReader();
-        PrintWriter out = null;
-        out = getPrintWriter(out);
-        readerLoop(in, out);
+    public void handle() {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
 
-    }
-
-    private BufferedReader getBufferedReader() {
-        BufferedReader in;
-        try {
-            in = new BufferedReader(
-                    new InputStreamReader(clientSocket.getInputStream()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return in;
-    }
-
-    private PrintWriter getPrintWriter(PrintWriter out) {
-        try {
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return out;
-    }
-
-    public ClientHandler() {
-    }
-
-    private void readerLoop(BufferedReader in, PrintWriter out) {
-        String s = "";
-        try {
-            while ((s = in.readLine()) != null) {
-                //System.out.println(s);
-                String qui= parse(s);
-                out.println(qui);
+            String command;
+            while ((command = in.readLine()) != null) {
+                String response = parse(command);
+                out.println(response);
             }
 
         } catch (IOException e) {
@@ -61,39 +32,44 @@ public class ClientHandler {
         }
     }
 
-    String parse(String s) {
-        String[] parts = s.split("-");
-        if (parts.length < 2) {
-            return "parametri insufficienti";
-        }
-        String cmd = parts[0];
-        String plate = parts[1];
-        switch (cmd.toLowerCase()) {
-            case "park":
-                return park(plate);
-            case "whereis":
-                return whereis(plate);
-            case "pay":
-                break;
+    private String parse(String command) {
+        switch (command.toLowerCase()) {
+            case "with_tomato":
+                return getPizzasWithIngredient("tomato");
+            case "with_cheese":
+                return getPizzasWithIngredient("cheese");
+            case "sorted_by_price":
+                return sortPizzasByPrice();
             default:
-                return "comando non riconosciuto";
+                return "Comando non riconosciuto";
         }
-        return "comando non riconosciuto";
     }
 
-    String park(String plate) {
-        Pad pad = parkingManager.findFreePad(plate);
-        if (pad != null) {
-            return pad.name;
+    private String getPizzasWithIngredient(String ingredient) {
+        List<Pizza> pizzasWithIngredient = pizzaList.stream()
+                .filter(pizza -> pizza.getIngredients().contains(ingredient))
+                .collect(Collectors.toList());
+
+        if (pizzasWithIngredient.isEmpty()) {
+            return "Nessuna pizza con l'ingrediente " + ingredient;
         }
-        return "non ce posto";
+
+        StringBuilder response = new StringBuilder();
+        for (Pizza pizza : pizzasWithIngredient) {
+            response.append(pizza.getName()).append(": ").append(pizza.getIngredients()).append("\n");
+        }
+        return response.toString();
     }
 
-    String whereis(String plate) {
-        Pad pad = parkingManager.findPlate(plate);
-        if (pad != null) {
-            return pad.name;
+    private String sortPizzasByPrice() {
+        List<Pizza> sortedPizzas = pizzaList.stream()
+                .sorted((p1, p2) -> Double.compare(p1.getPrice(), p2.getPrice()))
+                .collect(Collectors.toList());
+
+        StringBuilder response = new StringBuilder("Pizze ordinate per prezzo:\n");
+        for (Pizza pizza : sortedPizzas) {
+            response.append(pizza.getName()).append(": ").append(pizza.getPrice()).append("€\n");
         }
-        return "non ce l'auto";
+        return response.toString();
     }
 }

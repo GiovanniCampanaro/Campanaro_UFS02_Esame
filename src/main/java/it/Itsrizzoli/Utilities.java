@@ -7,26 +7,30 @@ import java.io.InputStreamReader;
 
 public class Utilities {
     static String readTextFrom(String fname) {
-
         InputStream is;
-        is = Pad.class.getClassLoader().getResourceAsStream(fname);
+        is = Utilities.class.getClassLoader().getResourceAsStream(fname);
+        if (is == null) {
+            throw new IllegalArgumentException("Il file " + fname + " non esiste");
+        }
+
         BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+        StringBuilder fileAsString = new StringBuilder();
+        String line;
 
-        String fileAsString = "";
-
-        String line = null;
-
-        while (true) {
+        try {
+            while ((line = buf.readLine()) != null) {
+                fileAsString.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                line = buf.readLine();
-                if (line == null)
-                    break;
-                fileAsString+=line+"\n";
+                buf.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        return fileAsString;
+        return fileAsString.toString();
     }
 }
