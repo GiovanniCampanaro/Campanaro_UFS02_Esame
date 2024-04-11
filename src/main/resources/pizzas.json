@@ -1,14 +1,37 @@
-[
-  {
-    "name": "Margherita",
-    "ingredients": ["tomato", "mozzarella", "basil"]
-  },
-  {
-    "name": "Prosciutto e Funghi",
-    "ingredients": ["tomato", "mozzarella", "ham", "mushrooms"]
-  },
-  {
-    "name": "Quattro Stagioni",
-    "ingredients": ["tomato", "mozzarella", "ham", "mushrooms", "artichokes", "olives", "anchovies", "oregano"]
-  }
-]
+{
+  "sortPizzaByPrice": [
+    {
+      "name": "Margherita",
+      "ingredients": [
+        "tomato",
+        "mozzarella",
+        "basil"
+      ],
+      "price": 7.99
+    },
+    {
+      "name": "Prosciutto e Funghi",
+      "ingredients": [
+        "tomato",
+        "mozzarella",
+        "ham",
+        "mushrooms"
+      ],
+      "price": 9.99
+    },
+    {
+      "name": "Quattro Stagioni",
+      "ingredients": [
+        "tomato",
+        "mozzarella",
+        "ham",
+        "mushrooms",
+        "artichokes",
+        "olives",
+        "anchovies",
+        "oregano"
+      ],
+      "price": 11.99
+    }
+  ]
+}

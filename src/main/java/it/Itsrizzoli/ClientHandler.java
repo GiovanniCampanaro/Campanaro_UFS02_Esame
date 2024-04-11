@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,7 +64,7 @@ public class ClientHandler {
 
     private String sortPizzasByPrice() {
         List<Pizza> sortedPizzas = pizzaList.stream()
-                .sorted((p1, p2) -> Double.compare(p1.getPrice(), p2.getPrice()))
+                .sorted(Comparator.comparingDouble(Pizza::getPrice))
                 .collect(Collectors.toList());
 
         StringBuilder response = new StringBuilder("Pizze ordinate per prezzo:\n");

@@ -1,12 +1,9 @@
 package it.Itsrizzoli;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.List;
 
 public class PizzaLoader {
@@ -14,14 +11,18 @@ public class PizzaLoader {
         List<Pizza> pizzas = null;
         try {
             Gson gson = new Gson();
-            Type listType = new TypeToken<List<Pizza>>(){}.getType();
-            BufferedReader reader = new BufferedReader(new FileReader(filename));
-            pizzas = gson.fromJson(reader, listType);
+            FileReader reader = new FileReader(filename);
+            PizzaData data = gson.fromJson(reader, PizzaData.class);
+            pizzas = data.sortPizzaByPrice;
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return pizzas;
+    }
+
+    static class PizzaData {
+        List<Pizza> sortPizzaByPrice;
     }
 }
 
