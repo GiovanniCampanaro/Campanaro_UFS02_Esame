@@ -37,7 +37,7 @@ public class Utilities {
         return fileAsString.toString();
     }
 
-    public static <T> T loadFromJson(String filename, Class<T> classOfT) {
+    public static <jsonPizzaloader> jsonPizzaloader loadFromJson(String filename, Class<jsonPizzaloader> classOfT) {
         try (Reader reader = new InputStreamReader(Utilities.class.getClassLoader().getResourceAsStream(filename))) {
             Gson gson = new Gson();
             return gson.fromJson(reader, classOfT);
